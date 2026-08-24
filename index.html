@@ -38,7 +38,7 @@ body{
   background:var(--notte);
   color:var(--carta);
   font-family:var(--font-body);
-  font-size:17px;
+  font-size:clamp(17px,1.1vw + 15px,21px);
   line-height:1.6;
   min-height:100vh;
   background-image:
@@ -90,7 +90,7 @@ header .filo{
 }
 .pannello h2{font-family:var(--font-display);font-weight:400;color:var(--ottone-chiaro);font-size:1.35rem;margin-bottom:16px;letter-spacing:.04em}
 .campi{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media (max-width:620px){.campi{grid-template-columns:1fr}}
+@media (max-width:760px){.campi{grid-template-columns:1fr}}
 .campo label{display:block;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--carta-dim);margin-bottom:7px}
 .campo input{
   width:100%;
@@ -98,12 +98,30 @@ header .filo{
   border:1px solid rgba(155,143,217,.3);
   color:var(--carta);
   border-radius:9px;
-  padding:12px 14px;
+  padding:13px 14px;
   font-size:1.05rem;
   font-family:var(--font-body);
   color-scheme:dark;
 }
 .campo input:focus{border-color:var(--ottone);outline:none}
+.data-tripla{display:grid;grid-template-columns:1fr 1.5fr 1.2fr;gap:8px}
+.data-tripla select{
+  width:100%;
+  background:#100e26;
+  border:1px solid rgba(155,143,217,.3);
+  color:var(--carta);
+  border-radius:9px;
+  padding:13px 30px 13px 12px;
+  font-size:1.05rem;
+  font-family:var(--font-body);
+  appearance:none;
+  -webkit-appearance:none;
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a34c' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 10px center;
+}
+.data-tripla select:focus{border-color:var(--ottone);outline:none}
+.data-tripla select.vuoto{color:var(--carta-dim)}
 .campo .aiuto{font-size:.78rem;color:var(--carta-dim);margin-top:6px}
 .azioni{margin-top:22px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
 button.principale{
@@ -114,7 +132,7 @@ button.principale{
   color:#181229;
   border:none;
   border-radius:10px;
-  padding:13px 34px;
+  padding:14px 34px;
   cursor:pointer;
   transition:transform .15s ease,box-shadow .15s ease;
 }
@@ -124,7 +142,7 @@ button.secondario{
   color:var(--carta-dim);
   border:1px solid rgba(184,178,201,.35);
   border-radius:10px;
-  padding:12px 20px;
+  padding:13px 20px;
   font-family:var(--font-body);
   font-size:.9rem;
   cursor:pointer;
@@ -217,7 +235,7 @@ details.cifre summary{cursor:pointer;color:var(--ottone-chiaro);font-family:var(
 .ciclo-svg{width:100%;height:auto;display:block;margin-top:6px}
 .ciclo-svg .onda{stroke:var(--lilla);stroke-width:2.5;fill:none}
 .ciclo-svg .punto{fill:var(--notte);stroke:var(--ottone);stroke-width:2}
-.ciclo-svg .punto.corrente{fill:var(--ottone);r:9}
+.ciclo-svg .punto.corrente{fill:var(--ottone)}
 .ciclo-svg text{font-family:var(--font-body);fill:var(--carta-dim);}
 .ciclo-svg text.np{font-family:var(--font-display);fill:var(--carta)}
 .anno-focus{
@@ -287,8 +305,18 @@ footer{
     <form id="modulo" novalidate>
       <div class="campi">
         <div class="campo">
-          <label for="data">Data di nascita</label>
-          <input type="date" id="data" required min="1900-01-01" max="2099-12-31">
+          <label for="selGiorno">Data di nascita</label>
+          <div class="data-tripla">
+            <select id="selGiorno" aria-label="Giorno di nascita" class="vuoto">
+              <option value="" disabled selected>Giorno</option>
+            </select>
+            <select id="selMese" aria-label="Mese di nascita" class="vuoto">
+              <option value="" disabled selected>Mese</option>
+            </select>
+            <select id="selAnno" aria-label="Anno di nascita" class="vuoto">
+              <option value="" disabled selected>Anno</option>
+            </select>
+          </div>
           <div class="aiuto">Ogni cifra della data contribuisce al profilo.</div>
         </div>
         <div class="campo">

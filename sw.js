@@ -1,5 +1,5 @@
 /* Numeria — service worker: cache-first per il funzionamento offline */
-const CACHE = "numeria-v1";
+const CACHE = "numeria-v2";
 const RISORSE = [
   "./",
   "./index.html",
@@ -27,7 +27,6 @@ self.addEventListener("fetch", e => {
     caches.match(e.request).then(hit => {
       if (hit) return hit;
       return fetch(e.request).then(risp => {
-        // memorizza anche i font remoti per l'uso offline
         const copia = risp.clone();
         caches.open(CACHE).then(c => c.put(e.request, copia)).catch(() => {});
         return risp;

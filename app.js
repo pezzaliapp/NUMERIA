@@ -275,13 +275,11 @@ function svgGriglia(conti, fr) {
   const cx = (col) => M + cella * col + cella / 2;
   const cy = (rig) => M + cella * rig + cella / 2;
   let out = `<svg class="griglia-svg" viewBox="0 0 ${S} ${S}" role="img" aria-label="Griglia della nascita">`;
-  // linee della griglia (tris)
   for (let i = 1; i <= 2; i++) {
     const p = M + cella * i;
     out += `<line class="filo-griglia" x1="${p}" y1="${M-8}" x2="${p}" y2="${S-M+8}"/>`;
     out += `<line class="filo-griglia" x1="${M-8}" y1="${p}" x2="${S-M+8}" y2="${p}"/>`;
   }
-  // frecce piene (linee luminose) e vuote (tratteggiate)
   const linea = (cifre, cls, delay) => {
     const [a,,c] = cifre;
     const [ca, ra] = POSIZIONI[a], [cc, rc] = POSIZIONI[c];
@@ -289,7 +287,6 @@ function svgGriglia(conti, fr) {
   };
   fr.vuote.forEach(f => out += linea(f.cifre, "freccia-vuota", 0));
   fr.piene.forEach((f, i) => out += linea(f.cifre, "freccia-linea", .3 + i * .35));
-  // numeri
   for (let n = 1; n <= 9; n++) {
     const [col, rig] = POSIZIONI[n];
     const q = conti[n];
@@ -297,15 +294,14 @@ function svgGriglia(conti, fr) {
     const size = q > 0 ? (q >= 3 ? 20 : q === 2 ? 26 : 32) : 26;
     out += `<text x="${cx(col)}" y="${cy(rig)}" text-anchor="middle" dominant-baseline="central" font-size="${size}" class="${q ? "" : "vuoto"}">${testo}</text>`;
   }
-  // etichette dei piani
   const piani = ["Mente", "Anima", "Corpo"];
   piani.forEach((p, i) => out += `<text class="piano" x="${S-4}" y="${cy(i)}" text-anchor="end" dominant-baseline="central" font-size="9" transform="rotate(90 ${S-10} ${cy(i)})">${p}</text>`);
   return out + "</svg>";
 }
 
-function svgPiramidi(pir, annoNascita) {
+function svgPiramidi(pir) {
   const W = 640, H = 300, baseY = 236;
-  const bx = [140, 320, 500];                       // basi: mese, giorno, anno
+  const bx = [140, 320, 500];
   const apice = (x1, x2, h) => [ (x1 + x2) / 2, baseY - h ];
   const [a1x, a1y] = apice(bx[0], bx[1], 96);
   const [a2x, a2y] = apice(bx[1], bx[2], 96);
@@ -317,13 +313,11 @@ function svgPiramidi(pir, annoNascita) {
   s += `<path class="lato" d="M ${bx[1]} ${baseY} L ${a2x} ${a2y} L ${bx[2]} ${baseY}"/>`;
   s += `<path class="lato" d="M ${a1x} ${a1y} L ${a3x} ${a3y} L ${a2x} ${a2y}"/>`;
   s += `<path class="lato esterna" d="M ${bx[0]} ${baseY} L ${a4x} ${a4y} L ${bx[2]} ${baseY}"/>`;
-  // numeri base
   const etBase = ["mese", "giorno", "anno"];
   pir.base.forEach((n, i) => {
     s += `<text x="${bx[i]}" y="${baseY + 26}" text-anchor="middle" font-size="26">${n}</text>`;
     s += `<text class="eta" x="${bx[i]}" y="${baseY + 46}" text-anchor="middle" font-size="11">${etBase[i]}</text>`;
   });
-  // picchi con età e anno
   const pos = [[a1x, a1y], [a2x, a2y], [a3x, a3y], [a4x, a4y]];
   pos.forEach(([x, y], i) => {
     s += `<text class="picco-n" x="${x}" y="${y - 8}" text-anchor="middle" font-size="26">${p[i].chiave}</text>`;
@@ -466,8 +460,7 @@ function bloccoNome(nn, nomeGrezzo) {
 /* ============================================================
    FLUSSO PRINCIPALE
    ============================================================ */
-function calcola(dataISO, nomeGrezzo) {
-  const [a, m, g] = dataISO.split("-").map(Number);
+function calcola(g, m, a, nomeGrezzo) {
   const oggi = new Date();
   const annoCorrente = oggi.getFullYear();
   let eta = annoCorrente - a;
@@ -492,13 +485,51 @@ function calcola(dataISO, nomeGrezzo) {
   $("#risultati").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+/* ---------- selettori data: giorno / mese / anno ---------- */
+const MESI = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno",
+              "Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
+
+function popolaSelettori() {
+  const sg = $("#selGiorno"), sm = $("#selMese"), sa = $("#selAnno");
+  for (let g = 1; g <= 31; g++) sg.add(new Option(g, g));
+  MESI.forEach((nome, i) => sm.add(new Option(nome, i + 1)));
+  const annoMax = new Date().getFullYear();
+  for (let a = annoMax; a >= 1900; a--) sa.add(new Option(a, a));
+  [sg, sm, sa].forEach(s => s.addEventListener("change", () => {
+    s.classList.remove("vuoto");
+    aggiornaGiorni();
+  }));
+}
+
+function aggiornaGiorni() {
+  // limita i giorni selezionabili in base a mese e anno scelti
+  const sg = $("#selGiorno"), m = +$("#selMese").value, a = +$("#selAnno").value;
+  if (!m) return;
+  const max = new Date(a || 2000, m, 0).getDate();
+  for (const opt of sg.options) {
+    if (!opt.value) continue;
+    opt.disabled = +opt.value > max;
+  }
+  if (+sg.value > max) sg.value = "";
+  if (!sg.value) sg.classList.add("vuoto");
+}
+
+function leggiData() {
+  const g = +$("#selGiorno").value, m = +$("#selMese").value, a = +$("#selAnno").value;
+  if (!g || !m || !a) return null;
+  if (g > new Date(a, m, 0).getDate()) return null;
+  return { g, m, a };
+}
+
+popolaSelettori();
+
 $("#modulo").addEventListener("submit", e => {
   e.preventDefault();
   const err = $("#errore");
   err.style.display = "none";
-  const val = $("#data").value;
-  if (!val) {
-    err.textContent = "Inserisci la data di nascita per continuare.";
+  const data = leggiData();
+  if (!data) {
+    err.textContent = "Scegli giorno, mese e anno di nascita per continuare.";
     err.style.display = "block";
     return;
   }
@@ -508,12 +539,13 @@ $("#modulo").addEventListener("submit", e => {
     err.style.display = "block";
     return;
   }
-  try { localStorage.setItem("numeria", JSON.stringify({ d: val, n: nome })); } catch (_) {}
-  calcola(val, nome);
+  try { localStorage.setItem("numeria", JSON.stringify({ g: data.g, m: data.m, a: data.a, n: nome })); } catch (_) {}
+  calcola(data.g, data.m, data.a, nome);
 });
 
 $("#pulisci").addEventListener("click", () => {
-  $("#data").value = ""; $("#nome").value = "";
+  ["#selGiorno", "#selMese", "#selAnno"].forEach(id => { $(id).value = ""; $(id).classList.add("vuoto"); });
+  $("#nome").value = "";
   $("#risultati").style.display = "none";
   $("#risultati").innerHTML = "";
   try { localStorage.removeItem("numeria"); } catch (_) {}
@@ -522,7 +554,13 @@ $("#pulisci").addEventListener("click", () => {
 /* ripristino ultima consultazione */
 try {
   const salvato = JSON.parse(localStorage.getItem("numeria") || "null");
-  if (salvato && salvato.d) { $("#data").value = salvato.d; $("#nome").value = salvato.n || ""; }
+  if (salvato && salvato.g) {
+    $("#selGiorno").value = salvato.g;
+    $("#selMese").value = salvato.m;
+    $("#selAnno").value = salvato.a;
+    ["#selGiorno", "#selMese", "#selAnno"].forEach(id => $(id).classList.remove("vuoto"));
+    $("#nome").value = salvato.n || "";
+  }
 } catch (_) {}
 
 /* ---------- PWA: service worker + invito all'installazione ---------- */

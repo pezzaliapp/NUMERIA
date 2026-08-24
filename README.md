@@ -18,6 +18,11 @@ dalla data di nascita e, facoltativamente, dal nome usato ogni giorno.
 - **Numeri del nome** — Anima (vocali), Persona (consonanti) ed Espressione
   (totale) con la tabella pitagorica A=1 … Z=8.
 
+## Novità v2
+- La data di nascita si sceglie con tre menu a tendina (giorno / mese / anno):
+  niente più calendario nativo, selezione immediata di qualunque anno dal 1900.
+- Tipografia fluida: testi più leggibili su smartphone e pieghevoli.
+
 ## Come usarla
 La cartella è già pronta: basta servirla da un qualunque hosting statico
 (GitHub Pages, Netlify, Vercel, un server qualsiasi). Per provarla in locale:
@@ -29,8 +34,6 @@ python3 -m http.server 8080
 ```
 
 Nota: il service worker (offline + installazione) richiede HTTPS o localhost.
-Aprendo `index.html` direttamente dal file system l'app funziona comunque,
-ma senza modalità offline.
 
 ## Privacy
 Tutti i calcoli avvengono nel browser. Nessun dato viene inviato a server:
