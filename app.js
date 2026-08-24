@@ -563,9 +563,35 @@ try {
   }
 } catch (_) {}
 
-/* ---------- PWA: service worker + invito all'installazione ---------- */
+/* ---------- PWA: service worker con aggiornamento automatico ---------- */
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
+  navigator.serviceWorker.register("sw.js").then(reg => {
+    // controlla se c'è una versione nuova a ogni apertura...
+    reg.update().catch(() => {});
+    // ...e ogni volta che l'app torna in primo piano
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") reg.update().catch(() => {});
+    });
+    // se un nuovo service worker è in attesa, attivalo subito
+    if (reg.waiting) reg.waiting.postMessage("attiva-subito");
+    reg.addEventListener("updatefound", () => {
+      const nuovo = reg.installing;
+      if (!nuovo) return;
+      nuovo.addEventListener("statechange", () => {
+        if (nuovo.state === "installed" && navigator.serviceWorker.controller) {
+          nuovo.postMessage("attiva-subito");
+        }
+      });
+    });
+  }).catch(() => {});
+
+  // quando il nuovo service worker prende il controllo, ricarica una volta
+  let giaRicaricato = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (giaRicaricato) return;
+    giaRicaricato = true;
+    location.reload();
+  });
 }
 let promptInstalla = null;
 window.addEventListener("beforeinstallprompt", e => {
