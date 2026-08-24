@@ -31,6 +31,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 img,svg,video{max-width:100%}
+main *,footer{max-height:1000000px}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -171,8 +172,8 @@ button.secondario:hover{color:var(--carta);border-color:var(--carta-dim)}
   font-size:clamp(1.5rem,3.5vw,1.9rem);
   color:var(--ottone-chiaro);margin-bottom:14px;letter-spacing:.03em;
 }
-.sezione p{margin-bottom:12px;color:var(--carta)}
-.sezione p.nota{color:var(--carta-dim);font-size:.9rem}
+.sezione p{margin-bottom:12px;color:var(--carta);font-size:1.08rem;line-height:1.65}
+.sezione p.nota{color:var(--carta-dim);font-size:.98rem}
 .numerone{
   font-family:var(--font-display);
   font-size:clamp(3.2rem,8vw,4.6rem);
@@ -210,15 +211,15 @@ button.secondario:hover{color:var(--carta);border-color:var(--carta-dim)}
 .chip-freccia.negativa{border-color:rgba(217,139,139,.3);background:rgba(217,139,139,.05)}
 .chip-freccia .segno{font-family:var(--font-display);font-size:1.15rem;color:var(--lilla);flex:none;line-height:1.4}
 .chip-freccia.negativa .segno{color:var(--rosso-tenue)}
-.chip-freccia b{display:block;font-size:.98rem}
-.chip-freccia span{font-size:.88rem;color:var(--carta-dim)}
+.chip-freccia b{display:block;font-size:1.06rem}
+.chip-freccia span{font-size:.98rem;color:var(--carta-dim)}
 
 /* dettagli cifre della griglia */
 details.cifre{margin-top:18px;border-top:1px solid rgba(155,143,217,.18);padding-top:14px}
 details.cifre summary{cursor:pointer;color:var(--ottone-chiaro);font-family:var(--font-display);letter-spacing:.05em}
 .cifra-voce{padding:10px 0;border-bottom:1px dashed rgba(184,178,201,.15)}
 .cifra-voce b{color:var(--ottone-chiaro)}
-.cifra-voce span{color:var(--carta-dim);font-size:.92rem}
+.cifra-voce span{color:var(--carta-dim);font-size:1rem}
 
 /* ---------- piramidi ---------- */
 .piramide-avvolgi{overflow-x:auto;padding:8px 0 4px}
@@ -228,7 +229,7 @@ details.cifre summary{cursor:pointer;color:var(--ottone-chiaro);font-family:var(
 .piramide-svg text{font-family:var(--font-display);fill:var(--carta)}
 .piramide-svg text.picco-n{fill:var(--ottone-chiaro)}
 .piramide-svg text.eta{fill:var(--carta-dim);font-family:var(--font-body)}
-.tab-picchi{width:100%;border-collapse:collapse;margin-top:14px;font-size:.95rem}
+.tab-picchi{width:100%;border-collapse:collapse;margin-top:14px;font-size:1.02rem}
 .tab-picchi th{font-family:var(--font-display);font-weight:400;color:var(--ottone-chiaro);text-align:left;padding:8px 10px;border-bottom:1px solid var(--bordo);letter-spacing:.04em}
 .tab-picchi td{padding:9px 10px;border-bottom:1px dashed rgba(184,178,201,.15);vertical-align:top}
 .tab-picchi td.num{font-family:var(--font-display);font-size:1.3rem;color:var(--ottone-chiaro)}
@@ -252,7 +253,7 @@ details.cifre summary{cursor:pointer;color:var(--ottone-chiaro);font-family:var(
 .nome-carta{border:1px solid rgba(155,143,217,.25);border-radius:12px;padding:18px;background:rgba(155,143,217,.05)}
 .nome-carta .etichetta-num{margin-bottom:6px;display:block}
 .nome-carta .numerone{font-size:2.6rem}
-.nome-carta p{font-size:.92rem;color:var(--carta-dim);margin-top:8px;margin-bottom:0}
+.nome-carta p{font-size:1rem;color:var(--carta-dim);margin-top:8px;margin-bottom:0}
 .lettere{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px}
 .lettere .lett{
   display:inline-flex;flex-direction:column;align-items:center;
@@ -349,7 +350,7 @@ footer{
   <button class="secondario" id="btnChiudiInstalla" aria-label="Chiudi">✕</button>
 </div>
 
-<footer>NUMERIA v5 · funziona interamente offline · nessun dato lascia il dispositivo</footer>
+<footer>NUMERIA v6 · funziona interamente offline · nessun dato lascia il dispositivo</footer>
 
 <script src="app.js"></script>
 </body>
