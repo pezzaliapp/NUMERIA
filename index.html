@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 <meta name="theme-color" content="#161433">
 <meta name="description" content="Numeria — calcolatore numerologico personale: griglia di nascita, numero del destino, frecce, piramidi, anni personali e numeri del nome.">
 <title>Numeria · Il tuo profilo numerologico</title>
@@ -29,12 +29,15 @@
   --font-body:'Karla',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+img,svg,video{max-width:100%}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 body{
+  overflow-x:hidden;
   background:var(--notte);
   color:var(--carta);
   font-family:var(--font-body);

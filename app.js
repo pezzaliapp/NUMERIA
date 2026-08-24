@@ -563,6 +563,29 @@ try {
   }
 } catch (_) {}
 
+
+/* ---------- guardia anti "modalità desktop" ----------
+   Alcuni browser Android (spesso su pieghevoli) impaginano la pagina
+   come se lo schermo fosse largo ~900-1000px e poi la rimpiccioliscono.
+   Se la viewport dichiarata supera di molto la larghezza fisica dello
+   schermo, riportiamo la scala a dimensioni leggibili. */
+(function () {
+  function correggi() {
+    const fisica = Math.min(screen.width, screen.height);
+    const logica = window.innerWidth;
+    if (!fisica || !logica) return;
+    if (logica > fisica * 1.25 && logica > 600) {
+      const fattore = Math.min(logica / fisica, 2.4);
+      document.documentElement.style.fontSize = (fattore * 100).toFixed(0) + "%";
+    } else {
+      document.documentElement.style.fontSize = "";
+    }
+  }
+  correggi();
+  window.addEventListener("resize", correggi);
+  window.addEventListener("orientationchange", correggi);
+})();
+
 /* ---------- PWA: service worker con aggiornamento automatico ---------- */
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   navigator.serviceWorker.register("sw.js").then(reg => {
